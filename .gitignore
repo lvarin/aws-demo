@@ -7,3 +7,6 @@
 
 # .tfvars files
 *.tfvars
+
+# secret variables
+aws_variables.sh

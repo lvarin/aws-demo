@@ -8,3 +8,12 @@ variable "instance_type" {
   description = "AWS instance type"
 }
 
+variable "zone_name" {
+  default     = "alvaroga.name"
+  description = "Pre-existing zone"
+}
+
+variable "subdomain_name" {
+  default     = "reaktor"
+  description = "Domain name for the app"
+}

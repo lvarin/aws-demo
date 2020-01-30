@@ -22,6 +22,18 @@ resource "aws_alb_listener" "front_end" {
   }
 }
 
+resource "aws_lb_listener" "lb_listener_secure" {
+  certificate_arn   = aws_acm_certificate_validation.cert.certificate_arn
+  load_balancer_arn = aws_alb.demo_eu_alb.id
+  port              = "443"
+  protocol          = "HTTPS"
+
+  default_action {
+    target_group_arn = aws_alb_target_group.nginx.id
+    type             = "forward"
+  }
+}
+
 resource "aws_alb_target_group" "nginx" {
   name       = "nginx"
   port       = 80

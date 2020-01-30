@@ -21,3 +21,7 @@ resource "aws_route53_record" "domain" {
   ttl     = 300
   records = ["${aws_alb.demo_eu_alb.dns_name}"]
 }
+
+output "DNS" {
+  value = aws_route53_record.domain.name
+}

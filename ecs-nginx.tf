@@ -32,7 +32,7 @@ resource "aws_ecs_task_definition" "nginx" {
       }
     ],
     "cpu": 256,
-    "memory": 300,
+    "memory": 256,
     "image": "nginx:latest",
     "essential": true,
     "name": "nginx",

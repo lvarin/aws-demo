@@ -20,34 +20,15 @@ resource "aws_ecs_service" "nginx" {
 
 resource "aws_ecs_task_definition" "nginx" {
   family = "nginx"
+  container_definitions = data.template_file.task_definition_template.rendered
 
-  container_definitions = <<EOF
-[
-  {
-    "portMappings": [
-      {
-        "hostPort": 0,
-        "protocol": "tcp",
-        "containerPort": 80
-      }
-    ],
-    "cpu": 256,
-    "memory": 256,
-    "image": "nginx:latest",
-    "essential": true,
-    "name": "nginx",
-    "logConfiguration": {
-    "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "/ecs-demo/nginx",
-        "awslogs-region": "eu-west-2",
-        "awslogs-stream-prefix": "ecs"
-      }
+}
+
+data "template_file" "task_definition_template" {
+    template = file("task_definition.json.tpl")
+    vars = {
+      IMAGE = "nginx"
     }
-  }
-]
-EOF
-
 }
 
 resource "aws_cloudwatch_log_group" "nginx" {

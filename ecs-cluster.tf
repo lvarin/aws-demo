@@ -7,9 +7,9 @@ resource "aws_ecs_cluster" "demo" {
 resource "aws_autoscaling_group" "demo-cluster" {
   name                      = "demo-cluster"
   vpc_zone_identifier       = [aws_subnet.demo-public-1.id, aws_subnet.demo-public-2.id, aws_subnet.demo-public-3.id]
-  min_size                  = "2"
-  max_size                  = "10"
-  desired_capacity          = "2"
+  min_size                  = var.min_size
+  max_size                  = var.max_size
+  desired_capacity          = var.min_size
   launch_configuration      = aws_launch_configuration.demo-cluster-lc.name
   health_check_grace_period = 120
   default_cooldown          = 30
@@ -33,7 +33,7 @@ resource "aws_autoscaling_policy" "demo-cluster" {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
 
-    target_value = 75
+    target_value = var.target_value
   }
 }
 

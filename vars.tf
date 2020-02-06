@@ -17,3 +17,20 @@ variable "subdomain_name" {
   default     = "reaktor"
   description = "Domain name for the app"
 }
+
+##
+variable "min_size" {
+  default     = 2
+  description = "Minimum number of instances"
+}
+
+variable "max_size" {
+  default     = 10
+  description = "Maximum number of instances"
+}
+
+variable "target_value" {
+  default = 75
+  description = "Target average CPU for the cluster"
+}
+##

@@ -3,7 +3,7 @@ resource "aws_ecs_service" "nginx" {
   name            = "nginx"
   cluster         = aws_ecs_cluster.demo.id
   task_definition = aws_ecs_task_definition.nginx.arn
-  desired_count   = 4
+  desired_count   = var.min_size * 2
   iam_role        = aws_iam_role.ecs-service-role.arn
   depends_on      = [aws_iam_role_policy_attachment.ecs-service-attach]
 
@@ -21,7 +21,6 @@ resource "aws_ecs_service" "nginx" {
 resource "aws_ecs_task_definition" "nginx" {
   family = "nginx"
   container_definitions = data.template_file.task_definition_template.rendered
-
 }
 
 data "template_file" "task_definition_template" {
@@ -36,8 +35,8 @@ resource "aws_cloudwatch_log_group" "nginx" {
 }
 
 resource "aws_appautoscaling_target" "ecs_target" {
-  max_capacity       = 20
-  min_capacity       = 4
+  max_capacity       = var.max_size * 2
+  min_capacity       = var.min_size * 2
   resource_id        = "service/demo/nginx"
   role_arn           = aws_iam_role.ecs-service-role.arn
   scalable_dimension = "ecs:service:DesiredCount"
@@ -56,7 +55,7 @@ resource "aws_appautoscaling_policy" "ecs_policy" {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
 
-    target_value       = 75
+    target_value       = var.target_value
     scale_in_cooldown  = 300
     scale_out_cooldown = 300
   }

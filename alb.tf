@@ -55,8 +55,8 @@ resource "aws_alb_target_group" "nginx" {
     path                = "/"
     healthy_threshold   = 2
     unhealthy_threshold = 10
-    timeout             = 60
-    interval            = 300
+    timeout             = 10
+    interval            = 15
     matcher             = "200,301,302"
   }
 }

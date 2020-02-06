@@ -14,7 +14,7 @@ resource "aws_ecs_service" "nginx" {
   }
 
   lifecycle {
-    ignore_changes = [task_definition]
+    ignore_changes = [desired_count]
   }
 }
 
@@ -35,3 +35,30 @@ resource "aws_cloudwatch_log_group" "nginx" {
   name = "/ecs-demo/nginx"
 }
 
+resource "aws_appautoscaling_target" "ecs_target" {
+  max_capacity       = 20
+  min_capacity       = 4
+  resource_id        = "service/demo/nginx"
+  role_arn           = aws_iam_role.ecs-service-role.arn
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "ecs_policy" {
+  name               = "cpu-auto-scaling"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.ecs_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs_target.service_namespace
+
+ target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+
+    target_value       = 75
+    scale_in_cooldown  = 300
+    scale_out_cooldown = 300
+  }
+
+}

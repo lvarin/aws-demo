@@ -25,7 +25,6 @@ resource "aws_autoscaling_group" "demo-cluster" {
 resource "aws_autoscaling_policy" "demo-cluster" {
   name                      = "demo-ecs-auto-scaling"
   policy_type               = "TargetTrackingScaling"
-  estimated_instance_warmup = "90"
   adjustment_type           = "ChangeInCapacity"
   autoscaling_group_name    = aws_autoscaling_group.demo-cluster.name
 

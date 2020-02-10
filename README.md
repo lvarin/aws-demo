@@ -2,8 +2,6 @@
 
 ## Quick start
 
-The values in "vars.tf" can be changed to configure differently the cluster.
-
 The environment variables:
 
   * AWS_SECRET_ACCESS_KEY
